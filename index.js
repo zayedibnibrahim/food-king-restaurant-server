@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const ObjectId = require('mongodb').ObjectId;
 const bodyParser = require('body-parser')
 require('dotenv').config()
 
@@ -23,7 +24,7 @@ client.connect(err => {
   //add products
   app.post('/addproductdb', (req, res) => {
     const product = req.body;
-      collection.insertOne(product)
+    collection.insertOne(product)
       .then(result => {
         res.send(result.insertedCount > 0)
       })
@@ -32,13 +33,20 @@ client.connect(err => {
   //get products
   app.get('/allproduct', (req, res) => {
     collection.find({})
-    .toArray((err, document) => {
-      res.send(document)
-    })
+      .toArray((err, document) => {
+        res.send(document)
+      })
   })
 
 });
 
+//delete product
+app.post('delete/:id', (req, res) => {
+  collection.deleteOne({ _id: ObjectId(req.params.id) })
+    .then(result => {
+      res.send(result.deletedCount > 0)
+    })
+})
 
 
 app.listen(process.env.PORT || port)
