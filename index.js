@@ -7,7 +7,7 @@ require('dotenv').config()
 
 app.use(cors());
 app.use(bodyParser.json());
-const port = 42000
+const port = 4200
 
 app.get('/', (req, res) => {
   res.send("Hi this is the server of Food King")
@@ -38,15 +38,15 @@ client.connect(err => {
       })
   })
 
+  //delete product
+  app.delete('/delete/:id', (req, res) => {
+    collection.deleteOne({ _id: ObjectId(req.params.id) })
+      .then(function (result) {
+        res.send(result.deletedCount > 0)
+      })
+  })
 });
 
-//delete product
-app.post('delete/:id', (req, res) => {
-  collection.deleteOne({ _id: ObjectId(req.params.id) })
-    .then(result => {
-      res.send(result.deletedCount > 0)
-    })
-})
 
 
 app.listen(process.env.PORT || port)
