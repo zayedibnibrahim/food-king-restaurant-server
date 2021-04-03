@@ -63,12 +63,6 @@ client.connect(err => {
         res.send(result.insertedCount > 0)
       })
   })
-  app.get('/allOrders', (req, res) => {
-    collectionOfOrder.find({})
-      .toArray((err, document) => {
-        res.send(document)
-      })
-  })
 });
 
 
