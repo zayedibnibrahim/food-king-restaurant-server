@@ -40,10 +40,21 @@ client.connect(err => {
 
   //delete product
   app.delete('/delete/:id', (req, res) => {
-    collection.deleteOne({ _id: ObjectId(req.params.id) })
+    collection.deleteOne({ key: req.params.id })
       .then(function (result) {
         res.send(result.deletedCount > 0)
       })
+  })
+
+  //by keys
+  app.post('/productsByKeys', (req, res) => {
+    const productsKeys = req.body;
+      collection.find({ _id: { $in: productsKeys } })
+        .toArray((err, document) => {
+          res.send(document)
+
+
+        })
   })
 });
 
