@@ -55,7 +55,7 @@ client.connect(err => {
         res.send(document)
       })
   })
-  //Add orders
+  //Add orderss
   app.post('/addOrders', (req, res) => {
     const ordersDetails = req.body;
     collectionOfOrder.insertOne(ordersDetails)
