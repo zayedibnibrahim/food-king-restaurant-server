@@ -22,6 +22,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
   const collection = client.db("food-king").collection("products");
   const collectionOfOrder = client.db("food-king").collection("orders");
+  const collectionOfCategory = client.db("food-king").collection("category");
   //add products
   app.post('/addproductdb', (req, res) => {
     const product = req.body;
@@ -62,6 +63,32 @@ client.connect(err => {
       .then(result => {
         res.send(result.insertedCount > 0)
       })
+  })
+
+  //Add Category
+  app.post('/addCategoryDb', (req, res) => {
+    const category = req.body;
+    collectionOfCategory.insertOne(category)
+      .then(result => {
+        res.send(result.insertedCount > 0)
+      })
+  })
+
+  //get category
+  app.get('/allCategory', (req, res) => {
+    collectionOfCategory.find({})
+      .toArray((err, doc) => {
+        res.send(doc)
+      })
+  })
+
+  //get product by category
+  app.post('/productByCategory', (req, res) => {
+    const category = req.body.catId
+    collection.find({ categoryId : category})
+    .toArray((err, doc) => {
+      res.send(doc)
+    })
   })
 });
 
