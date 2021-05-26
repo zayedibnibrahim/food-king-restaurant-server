@@ -1,4 +1,5 @@
 const express = require('express')
+const MongoClient = require('mongodb').MongoClient;
 const app = express()
 const cors = require('cors')
 const ObjectId = require('mongodb').ObjectId;
@@ -7,15 +8,10 @@ require('dotenv').config()
 
 app.use(cors());
 app.use(bodyParser.json());
+
 const port = 4200
 
-app.get('/', (req, res) => {
-  res.send("Hi this is the server of Food King")
-})
 
-
-
-const MongoClient = require('mongodb').MongoClient;
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.6gnbd.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -23,6 +19,10 @@ client.connect(err => {
   const collection = client.db("food-king").collection("products");
   const collectionOfOrder = client.db("food-king").collection("orders");
   const collectionOfCategory = client.db("food-king").collection("category");
+
+  app.get('/', (req, res) => {
+    res.send("Hi this is the server of Food King")
+  })
   //add products
   app.post('/addproductdb', (req, res) => {
     const product = req.body;
@@ -85,10 +85,10 @@ client.connect(err => {
   //get product by category
   app.post('/productByCategory', (req, res) => {
     const category = req.body.catId
-    collection.find({ categoryId : category})
-    .toArray((err, doc) => {
-      res.send(doc)
-    })
+    collection.find({ categoryId: category })
+      .toArray((err, doc) => {
+        res.send(doc)
+      })
   })
 });
 
