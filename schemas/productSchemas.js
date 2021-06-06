@@ -4,16 +4,17 @@ const productSchema = mongoose.Schema({
         type: String
     },
     price: {
-        type:   String
+        type: String
     },
     weight: {
-        type:   String
+        type: String
     },
     image: {
-        type:   String
+        type: Object
     },
     categoryId: {
-        type:   String
+        type: mongoose.Types.ObjectId,
+        ref: "category"
     }
 })
 
