@@ -4,6 +4,7 @@ const cors = require('cors')
 const productHandler = require('./routeHandler/productHandler')
 const orderHandler = require('./routeHandler/orderHandler')
 const categoryHandler = require('./routeHandler/categoryHandler')
+const addonHandler = require('./routeHandler/addonHandler')
 
 require('dotenv').config()
 
@@ -24,6 +25,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 app.use("/product", productHandler)
 app.use("/order", orderHandler)
 app.use("/category", categoryHandler)
+app.use("/addon", addonHandler)
 
 
 app.get('/', (req, res) => {
