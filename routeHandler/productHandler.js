@@ -20,12 +20,13 @@ router.post('/', upload.single('image'), async (req, res) => {
             price: req.body.price,
             weight: req.body.weight,
             categoryId: req.body.categoryId,
+            addon: req.body.addons,
             image: {
                 url: result.secure_url,
                 cloudinary_id: result.public_id
             }
         })
-
+        console.log(newProduct)
         await newProduct.save((err, data) => {
             if (err) {
                 res.status(500).json({
@@ -45,6 +46,11 @@ router.post('/', upload.single('image'), async (req, res) => {
 
 //delete a product
 router.delete('/:id', async (req, res) => {
+
+    //Deleted Image from cloudinary
+    const result = await Product.find({_id: req.params.id})
+    await cloudinary.uploader.destroy(result[0].image.cloudinary_id);
+
     await Product.deleteOne({ _id: req.params.id }, (err, data) => {
         if (err) {
             res.status(500).json({
