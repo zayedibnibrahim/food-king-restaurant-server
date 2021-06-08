@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const productSchema = require('../schemas/productSchemas')
 const Product = new mongoose.model('product', productSchema)
 const upload = require('../utils/multer')
+const ObjectId = require('mongodb').ObjectId;
 const cloudinary = require('../utils/cloudinary')
 
 //POST a product
@@ -15,18 +16,21 @@ router.post('/', upload.single('image'), async (req, res) => {
             upload_preset: 'for_food',
             use_filename: true
         });
+        
         const newProduct = new Product({
             name: req.body.name,
             price: req.body.price,
             weight: req.body.weight,
             categoryId: req.body.categoryId,
-            addon: req.body.addons,
+            addon: [
+                req.body.addons
+            ],
             image: {
                 url: result.secure_url,
                 cloudinary_id: result.public_id
             }
         })
-        console.log(newProduct)
+        // console.log(newProduct)
         await newProduct.save((err, data) => {
             if (err) {
                 res.status(500).json({
@@ -48,7 +52,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 router.delete('/:id', async (req, res) => {
 
     //Deleted Image from cloudinary
-    const result = await Product.find({_id: req.params.id})
+    const result = await Product.find({ _id: req.params.id })
     await cloudinary.uploader.destroy(result[0].image.cloudinary_id);
 
     await Product.deleteOne({ _id: req.params.id }, (err, data) => {

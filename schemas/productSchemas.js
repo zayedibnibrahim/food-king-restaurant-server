@@ -17,7 +17,7 @@ const productSchema = mongoose.Schema({
         ref: "category"
     },
     addon: {
-        type: String
+        type: Array
     }
 })
 
