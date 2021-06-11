@@ -6,7 +6,7 @@ const productSchema = mongoose.Schema({
     price: {
         type: String
     },
-    weight: {
+    stock: {
         type: String
     },
     image: {
@@ -16,9 +16,10 @@ const productSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "category"
     },
-    addon: {
-        type: Array
-    }
+    addon: [{
+        type: mongoose.Types.ObjectId,
+        ref: "addon"
+    }]
 })
 
 module.exports = productSchema;

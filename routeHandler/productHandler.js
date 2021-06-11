@@ -4,12 +4,10 @@ const mongoose = require('mongoose')
 const productSchema = require('../schemas/productSchemas')
 const Product = new mongoose.model('product', productSchema)
 const upload = require('../utils/multer')
-const ObjectId = require('mongodb').ObjectId;
 const cloudinary = require('../utils/cloudinary')
 
 //POST a product
 router.post('/', upload.single('image'), async (req, res) => {
-
     try {
         // Upload image to cloudinary
         const result = await cloudinary.uploader.upload(req.file.path, {
@@ -20,11 +18,9 @@ router.post('/', upload.single('image'), async (req, res) => {
         const newProduct = new Product({
             name: req.body.name,
             price: req.body.price,
-            weight: req.body.weight,
+            stock: req.body.stock,
             categoryId: req.body.categoryId,
-            addon: [
-                req.body.addons
-            ],
+            addon: req.body.addon.split(","),
             image: {
                 url: result.secure_url,
                 cloudinary_id: result.public_id
@@ -118,6 +114,7 @@ router.post('/idbundle', async (req, res) => {
 router.get('/productByCategory/:id', async (req, res) => {
     await Product.find({ categoryId: req.params.id })
         .populate("categoryId")
+        .populate("addon")
         .exec((err, data) => {
             if (err) {
                 res.status(500).json({
